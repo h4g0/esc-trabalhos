@@ -4,11 +4,11 @@
    It sets the number of processors and the class of the NPB
    in this directory. Do not modify it by hand.   */
    
-#define COMPILETIME "30 Mar 2020"
+#define COMPILETIME "11 Apr 2020"
 #define NPBVERSION "3.3.1"
 #define CC "icc"
-#define CFLAGS "-O3 -mcmodel=medium"
+#define CFLAGS "-O1 -mcmodel=medium"
 #define CLINK "$(CC)"
-#define CLINKFLAGS "-O3 -mcmodel=medium"
+#define CLINKFLAGS "-O1 -mcmodel=medium"
 #define C_LIB "(none)"
 #define C_INC "(none)"

@@ -1,0 +1,74 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=1:r662
+#PBS -l walltime=00:20:00
+#PBS -V
+
+
+
+
+cd esc-nas/NPB3.3.1/NPB3.3-OMP
+
+compilers=("gnu,5.3.0" "gnu,6.1.0" "gnu,7.2.0" "intel,2019")
+options=("O3" "O2" "O1")
+
+for i in ${compilers[@]};
+do
+	IFS=',' read comp version <<< "$i"
+
+for v in ${options[@]};
+do
+	compiler=$comp$v
+	rm bin/*
+
+	if [[ $compiler = "intelO3" ]];
+	then
+		echo "compiler 1"
+		cp config/intelO3.def config/make.def
+		source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+		module load gcc/5.3.0
+
+	elif [[ $compiler = "intelO2" ]];
+	then
+		echo "compiler 2"
+		cp config/intelO2.def config/make.def
+		source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+		module load gcc/5.3.0
+
+	elif [[ $compiler = "intelO1" ]];
+	then
+		echo "compiler 3"
+		cp config/intelO1.def config/make.def
+		source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+		module load gcc/5.3.0
+	
+	elif [[ $compiler = "gnuO3" ]];
+	then
+		echo "compiler 4"
+		cp config/gnuO3.def config/make.def
+		module load gcc/$version
+	
+	elif [[ $compiler = "gnuO2" ]];
+	then
+		echo "compiler 5"
+		cp config/gnuO2.def config/make.def
+		module load gcc/$version
+	
+	
+	elif [[ $compiler = "gnuO1" ]]
+	then
+		echo "compiler 6"
+		cp config/gnuO1.def config/make.def
+		module load gcc/$version
+
+	fi
+	
+	echo $compiler.$version
+
+	rm -r $compiler.$version
+	mkdir $compiler.$version
+
+	make clean
+	make suite
+	mv bin/* $compiler.$version
+done
+done

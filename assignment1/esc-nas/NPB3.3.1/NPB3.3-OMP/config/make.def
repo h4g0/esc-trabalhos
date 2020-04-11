@@ -11,8 +11,8 @@
 #---------------------------------------------------------------------------
 # Parallel Fortran:
 #
-# For CG, EP, FT, MG, LU, SP, BT and UA, which are in Fortran, the following 
-# must be defined:
+# For CG, EP, FT, MG, LU, SP and BT, which are in Fortran, the following must 
+# be defined:
 #
 # F77        - Fortran compiler
 # FFLAGS     - Fortran compilation arguments
@@ -29,7 +29,7 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for Fortran programs
 #---------------------------------------------------------------------------
-F77 = gfortran
+F77 = ifort
 # This links fortran programs; usually the same as ${F77}
 FLINK	= $(F77)
 
@@ -58,7 +58,7 @@ FLINKFLAGS = -O1 -fopenmp -mcmodel=medium
 #---------------------------------------------------------------------------
 # Parallel C:
 #
-# For IS and DC, which are in C, the following must be defined:
+# For IS, which is in C, the following must be defined:
 #
 # CC         - C compiler 
 # CFLAGS     - C compilation arguments
@@ -75,14 +75,14 @@ FLINKFLAGS = -O1 -fopenmp -mcmodel=medium
 #---------------------------------------------------------------------------
 # This is the C compiler used for C programs
 #---------------------------------------------------------------------------
-CC = gcc
+CC = icc
 # This links C programs; usually the same as ${CC}
 CLINK	= $(CC)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker 
 #---------------------------------------------------------------------------
-C_LIB  = -lm
+C_LIB  =
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler 
@@ -91,18 +91,6 @@ C_INC =
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
-# DC inspects the following flags (preceded by "-D"):
-#
-# IN_CORE - computes all views and checksums in main memory (if there is 
-# enough memory)
-#
-# VIEW_FILE_OUTPUT - forces DC to write the generated views to disk
-#
-# OPTIMIZATION - turns on some nonstandard DC optimizations
-#
-# _FILE_OFFSET_BITS=64 
-# _LARGEFILE64_SOURCE - are standard compiler flags which allow to work with 
-# files larger than 2GB.
 #---------------------------------------------------------------------------
 CFLAGS	= -O1 -fopenmp -mcmodel=medium
 
@@ -120,7 +108,7 @@ CLINKFLAGS = -O1 -fopenmp -mcmodel=medium
 # this compiler go here also; typically there are few flags required; hence 
 # there are no separate macros provided for such flags.
 #---------------------------------------------------------------------------
-UCC	= gcc
+UCC	= icc
 
 
 #---------------------------------------------------------------------------
@@ -142,7 +130,7 @@ RAND   = randi8
 
 #---------------------------------------------------------------------------
 # The variable WTIME is the name of the wtime source code module in the
-# common directory.  
+# NPB3.x/common directory.  
 # For most machines,       use wtime.c
 # For SGI power challenge: use wtime_sgi64.c
 #---------------------------------------------------------------------------
@@ -150,7 +138,7 @@ WTIME  = wtime.c
 
 
 #---------------------------------------------------------------------------
-# Enable if either Cray (not Cray-X1) or IBM: 
+# Enable if either Cray or IBM: 
 # (no such flag for most machines: see common/wtime.h)
 # This is used by the C compiler to pass the machine name to common/wtime.h,
 # where the C/Fortran binding interface format is determined

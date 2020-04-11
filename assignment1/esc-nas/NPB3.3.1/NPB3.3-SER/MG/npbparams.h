@@ -18,7 +18,7 @@ c
         logical  convertdouble
         parameter (convertdouble = .false.)
         character compiletime*11
-        parameter (compiletime='30 Mar 2020')
+        parameter (compiletime='11 Apr 2020')
         character npbversion*5
         parameter (npbversion='3.3.1')
         character cs1*5
@@ -30,8 +30,8 @@ c
         character cs4*6
         parameter (cs4='(none)')
         character cs5*19
-        parameter (cs5='-O3 -mcmodel=medium')
+        parameter (cs5='-O1 -mcmodel=medium')
         character cs6*19
-        parameter (cs6='-O3 -mcmodel=medium')
+        parameter (cs6='-O1 -mcmodel=medium')
         character cs7*6
         parameter (cs7='randi8')

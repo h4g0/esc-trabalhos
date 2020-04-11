@@ -12,11 +12,11 @@ c
         logical  convertdouble
         parameter (convertdouble = .false.)
         character compiletime*11
-        parameter (compiletime='28 Mar 2020')
+        parameter (compiletime='11 Apr 2020')
         character npbversion*5
         parameter (npbversion='3.3.1')
-        character cs1*8
-        parameter (cs1='gfortran')
+        character cs1*5
+        parameter (cs1='ifort')
         character cs2*6
         parameter (cs2='$(F77)')
         character cs3*6
