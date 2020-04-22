@@ -1,0 +1,86 @@
+#!/bin/bash
+#PBS -l nodes=2:ppn=48:r662
+#PBS -l walltime=02:00:00
+#PBS -V
+
+module load gcc/5.3.0
+
+if [[ $compiler == "intel_mpich2_eth" ]];
+then
+	echo "compiler 1"
+	module load intel/mpich2_eth/$version
+	source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+
+elif [[ $compiler == "intel_mpich_eth" ]];
+then
+	echo "compiler 2"
+	module load intel/mpich_eth/$version
+	source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+
+elif [[ $compiler == "gnu_mpich_eth" ]];
+then
+	echo "compiler 3"
+	module load gcc/5.3.0
+	module load gnu/mpich_eth/$version
+
+elif [[ $compiler == "gnu_mpich2_eth" ]];
+then
+	echo "compiler 4"
+	module load gcc/5.3.0
+	module load gnu/mpich2_eth/$version
+
+elif [[ $compiler == "intel_eth" ]];
+then
+	echo "compiler 5"
+	module load intel/openmpi_eth/$version
+	source /share/apps/intel/parallel_studio_xe_2019/compilers_and_libraries_2019/linux/bin/compilervars.sh intel64
+
+elif [[ $compiler == "gnu_eth" ]]
+then
+	echo "compiler 6"
+	module load gcc/5.3.0
+	module load gnu/openmpi_eth/$version
+
+fi
+
+cd esc-nas
+
+#cp config/NAS.samples/suite.def.is config/suite.def
+#cp config/NAS.samples/make.def.gcc_x86 config/make.def
+
+##repetitions=1
+##tests=5
+
+#define file name and executable
+##test_file="is_D_gnuO1"
+##test_exe="is.D.x"
+
+cpu="tests/mpi/cpu/$test_file.txt"
+memory="tests/mpi/memory/$test_file.txt"
+io="tests/mpi/io/$test_file.txt"
+
+sar 1 >> $cpu &
+sar -r 1 >> $memory &
+sar -b 1 >> $io &
+
+for((d = 0; d < tests; d++))
+do
+	for((i = 0; i < repetitions; i++))
+	do
+		if [[ $compiler == "gnu_eth" ]];
+		then
+			mpirun -np $cores -mca btl self,sm,tcp ./NPB3.3.1/NPB3.3-MPI/$compiler.$version/$test_exe
+		
+		else
+			mpirun -np $cores ./NPB3.3.1/NPB3.3-MPI/$compiler.$version/$test_exe
+			
+		fi
+		
+	done
+	
+	echo "#test $d" >> $cpu
+	echo "#test $d" >> $memory
+	echo "#test $d" >> $io
+	
+done
+
