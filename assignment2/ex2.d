@@ -67,14 +67,28 @@ profile:::tick-10s{
 
     printf("---------------------------------------------\n");
 
-    printf("Faillures to open existing files\n");
+    printf("Faillure to open existing files\n");
     printa(@open_existing_file_faillure);
     trunc(@open_existing_file_faillure);
     printf("---------------------------------------------\n");
 
-    printf("Faillures to create news files\n");
+    printf("Faillure to create news files\n");
     printa(@create_file_faillure);
     trunc(@create_file_faillure);
+
+
+    printf("---------------------------------------------\n");
+
+    printf("Success to open existing files\n");
+    printa(@open_existing_file_success);
+    trunc(@open_existing_file_success);
+    printf("---------------------------------------------\n");
+
+    printf("Success to create news files\n");
+    printa(@create_file_success);
+    trunc(@create_file_success);
+
+
 
 
     printf("---------------------------------------------\n");
@@ -86,6 +100,9 @@ END{
     trunc(@create_new_file);
     trunc(@open_existing_file_faillure);
     trunc(@create_file_faillure);
+    trunc(@open_existing_file_success);
+    trunc(@create_file_success);
 }
+
 
 

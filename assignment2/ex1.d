@@ -1,6 +1,3 @@
-module dtrace.esc-trabalhos.assignment2.ex1;
-
-
 syscall::open:entry
 {
     self->file  = arg0;
@@ -9,6 +6,7 @@ syscall::open:entry
 }
 
 syscall::open:return
+/copyinstr(self->file) == ".*proc.*"/
 {
     printf("%s(pid:%d,uid:%d,gid:%d) %s with flags %d called %s\n",execname,pid,uid,gid,copyinstr(self->file),
                 self->flags,probefunc);
