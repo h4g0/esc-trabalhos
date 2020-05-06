@@ -1,40 +1,40 @@
+#!/usr/sbin/dtrace -qs
 BEGIN{
-
+    CREATE_FILE_FLAG = 64;
 }
 
+
 syscall::open:entry
-/arg1 == 64/
+/(arg1 & CREATE_FILE_FLAG) != CREATE_FILE_FLAG/
 {
     self->flags = arg1;
     @open_existing_file[pid,execname] = count();
-    /* printf("%s(pid:%d,uid:%d,gid:%d), called %s\n",execname,pid,uid,gid,probefunc); */
 }
 
 
 syscall::open:entry
-/arg1 != 64/
+/(arg1 & CREATE_FILE_FLAG) == CREATE_FILE_FLAG/
 {
     self->flags = arg1;
     @create_new_file[pid,execname] = count();
-    /* printf("%s(pid:%d,uid:%d,gid:%d), called %s\n",execname,pid,uid,gid,probefunc); */
 }
 
 syscall::open:return
-/self->flags == 64 & errno == 0/
+/(self->flags & CREATE_FILE_FLAG) == CREATE_FILE_FLAG & errno == 0/
 {
     @create_file_success[pid,execname] = count();
     self->flags = 0;
 }
 
 syscall::open:return
-/self->flags == 64 & errno != 0/
+/(self->flags & CREATE_FILE_FLAG) == CREATE_FILE_FLAG & errno != 0/
 {
     @create_file_faillure[pid,execname] = count();
     self->flags = 0;
 }
 
 syscall::open:return
-/self->flags != 64 & errno == 0/
+/(self->flags & CREATE_FILE_FLAG) != CREATE_FILE_FLAG & errno == 0/
 {
     @open_existing_file_success[pid,execname] = count();
     self->flags = 0;
@@ -42,14 +42,14 @@ syscall::open:return
 
 
 syscall::open:return
-/self->flags != 64 & errno != 0/
+/(self->flags & CREATE_FILE_FLAG) != CREATE_FILE_FLAG & errno != 0/
 {
     @open_existing_file_faillure[pid,execname] = count();
     self->flags = 0;
 }
 
 
-profile:::tick-10s{
+profile:::tick-$1s{
     
     printf("Date: %Y\n",walltimestamp);
 
@@ -87,9 +87,6 @@ profile:::tick-10s{
     printf("Success to create news files\n");
     printa(@create_file_success);
     trunc(@create_file_success);
-
-
-
 
     printf("---------------------------------------------\n");
 

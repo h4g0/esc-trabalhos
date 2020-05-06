@@ -1,14 +1,21 @@
+#!/usr/sbin/dtrace -qs
 syscall:::entry
+/execname == $1/
 {
-    @execs[execname] = count();
-    time[pid] = timestamp;
+    @syscalls[probefunc] = count();
+    time_pid[pid] = timestamp;
 }
 
 
-syscall:::open:return
-/time[pid] != 0/
+syscall:::return
+/time_pid[pid] != 0 & execname == $1/
 {
-    @open_existing_file_success[pid] = count();
-    time[execname] += timestamp -time[pid];
-    time[pid] = 0;
+    @time[execname] = sum(timestamp - time_pid[pid]);
+    time_pid[pid] = 0;
+}
+
+END{
+    printf("%s\n",$1);
+    printa(@time);
+    trunc(@time);
 }
