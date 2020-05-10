@@ -17,11 +17,9 @@ int get_max_digit_size(int nr_buckets,int size) {
 
 int get_digit(int number,int digit){
 	
-	DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 
 	return (number / digits_power[MAX_DIGITS - digit - 1]) % NR_BUCKETS;
 	
-	DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 }
 
@@ -60,7 +58,12 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	start[NR_BUCKETS] = 0;
 	
 	for(int i  = begining; i < end;i++){
+		
+		DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+		
 		count[get_digit(array[i],digit)]++;
+		
+		DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 	}	
 
@@ -71,7 +74,12 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 	
 	for(int i = begining;i < end;i++){
+		
+		DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+		
 		int msdigit = get_digit(array[i],digit);
+		
+		DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
 
 	}
@@ -156,7 +164,11 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 		for(int i  = task_start; i < task_end;i++){
 	
+			DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+			
 			task_counts[get_digit(array[i],digit)]++;
+			
+			DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		}
 		
 		for(int i = 0; i < NR_BUCKETS;i++){
@@ -174,6 +186,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 	for(int i = 1; i < NR_BUCKETS;i++){
 		start[i] += start[i-1] + count[i-1];
 	}
+	
 	DTRACE_PROBE2(omp,finish_count_digits,end - begining,digit);
 	
 	DTRACE_PROBE2(omp,start_insert_into_buckets,end - begining,digit);
@@ -191,7 +204,12 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 			task_end = end;
 
 		for(int i = task_start;i < task_end;i++){
+			
+			DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+			
 			int msdigit = get_digit(array[i],digit);
+			
+			DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 			int insert_pos;
 				

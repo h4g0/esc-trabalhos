@@ -5,7 +5,7 @@ provider seq {
 	
 	probe start_get_digit(int,int,int);
 	probe finish_get_digit(int,int,int);
-	
+
 	probe start_seq_radix(int,int);
 	probe finish_seq_radix(int,int);
 	

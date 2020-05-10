@@ -17,11 +17,7 @@ int get_max_digit_size(int nr_buckets,int size) {
 
 int get_digit(int number,int digit){
 	
-	DTRACE_PROBE3(seq,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
-
 	return (number / digits_power[MAX_DIGITS - digit - 1]) % NR_BUCKETS;
-	
-	DTRACE_PROBE3(seq,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 }
 
@@ -60,7 +56,12 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	start[NR_BUCKETS] = 0;
 	
 	for(int i  = begining; i < end;i++){
+		
+		DTRACE_PROBE3(seq,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+		
 		count[get_digit(array[i],digit)]++;
+		
+		DTRACE_PROBE3(seq,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 	}	
 
@@ -71,8 +72,13 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 	
 	for(int i = begining;i < end;i++){
+		
+		DTRACE_PROBE3(seq,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
+		
 		int msdigit = get_digit(array[i],digit);
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
+		
+		DTRACE_PROBE3(seq,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 
 	}
 	
