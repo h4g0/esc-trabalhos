@@ -6,28 +6,60 @@ BEGIN{
 
 seq*:::start_sorting_into_buckets
 {
-    started_sorting[pid] = timestamp;
+    started_sorting[pid,arg1] = timestamp;
+    started_section[pid,arg1,"sorting_into_buckets"] = timestamp;
     @sizes_per_digit[arg1] = quantize(arg2);
 }
 
 seq*:::finish_sorting_into_buckets
-/started_sorting[pid] != 0/
+/started_sorting[pid,arg1] != 0/
 {
-    @sorting_into_buckets[arg1] = sum(timestamp - started_sorting[pid]);
-    started_sorting[pid] = 0;
+    @sorting_into_buckets[arg1] = sum(timestamp - started_sorting[pid,arg1]);
+    started_sorting[pid,arg1] = 0;
+    @time_spent_in_section["sorting into buckets"] = sum(timestamp - started_section[pid,arg1,"sorting_into_buckets"]);
+    started_section[pid,arg1,"sorting_into_buckets"] = 0;
 }
 
-seq*:::start_get_digit
+
+seq*:::start_copy_to_main_array
+{
+	started_section[pid,arg1,"copy_to_main_array"] = timestamp;
+}
+
+seq*:::finish_copy_to_main_array
+/started_section[pid,arg1,"copy_to_main_array"] != 0/ 
+{
+	@time_spent_in_section["copy to main array"] = sum(timestamp - started_section[pid,arg1,"copy_to_main_array"]);
+	started_section[pid,arg1,"copy_to_main_array"] = 0;
+}
+
+seq*:::start_allocate_temp_array
+{
+	started_section[pid,arg1,"allocate_temp_array"] = timestamp;
+}
+
+seq*:::finish_allocate_temp_array
+/started_section[pid,arg1,"allocate_temp_array"] != 0/ 
+{
+	@time_spent_in_section["allocate temp array"] = sum(timestamp - started_section[pid,arg1,"allocate_temp_array"]);
+	started_section[pid,arg1,"allocate_temp_array"] = 0;
+}
+
+
+seq*:::start_seq_radix
 {
 	@get_digit[arg1] = count();
-	getting_digit[pid] = timestamp;
+	getting_digit[pid,arg1] = timestamp;
+	started_section[pid,arg1,"total"] = timestamp;
 }
 
-seq*:::finish_get_digit
-/getting_digit[pid] != 0/
+seq*:::finish_seq_radix
+/getting_digit[pid,arg1] != 0/
 {
-	@time_getting_digit[arg1] = sum(timestamp - getting_digit[pid]);
-	getting_digit[pid] = 0;
+	@time_getting_digit[arg1] = sum(timestamp - getting_digit[pid,arg1]);
+	@time_spent_in_section["total"] = sum(timestamp - started_section[pid,arg1,"total"]);
+	getting_digit[pid,arg1] = 0;
+	started_section[pid,arg1,"total"] = 0;
 }
 
 END{
@@ -41,12 +73,19 @@ END{
     printa(@sizes_per_digit);
     trunc(@sizes_per_digit);
     
-    printf("time spend per digit\n");
+    printf("time spent per digit\n");
     normalize(@time_getting_digit ,1000000000);
     printa(@time_getting_digit);
     trunc(@time_getting_digit);
 
+    printf("calls by digit\n");
+    printa(@get_digit);
+    trunc(@get_digit);
 
+    printf("time spent in different sections of the program\n");
+    normalize(@time_spent_in_section ,1000000000);
+    printa(@time_spent_in_section);
+    trunc(@time_spent_in_section);
 }
 
 

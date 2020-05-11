@@ -25,11 +25,15 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 		
 	DTRACE_PROBE2(seq,start_seq_radix,end - begining,digit);
 	
-	if(end <= begining + 1)
+	if(end <= begining + 1){
+		DTRACE_PROBE2(seq,finish_seq_radix,end - begining,digit);
 		return ;
-	
-	if(digit == MAX_DIGITS)
+	}
+
+	if(digit == MAX_DIGITS){
+		DTRACE_PROBE2(seq,finish_seq_radix,end - begining,digit);
 		return ;
+	}
 
 
 	int count[NR_BUCKETS];
@@ -57,11 +61,9 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	for(int i  = begining; i < end;i++){
 		
-		DTRACE_PROBE3(seq,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 		count[get_digit(array[i],digit)]++;
 		
-		DTRACE_PROBE3(seq,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 	}	
 
@@ -73,12 +75,10 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	for(int i = begining;i < end;i++){
 		
-		DTRACE_PROBE3(seq,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 		int msdigit = get_digit(array[i],digit);
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
 		
-		DTRACE_PROBE3(seq,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 
 	}
 	
@@ -164,7 +164,7 @@ int main(int argc,char **argv){
 	
 	int size = atoi(argv[1]);
 	int nr_tests = atoi(argv[2]);
-	int k = 5;
+	int k = nr_tests;
 	double times[nr_tests];
 
 	int *test_array = malloc(size * sizeof(int));
@@ -190,7 +190,7 @@ int main(int argc,char **argv){
 
 	double average = 0;
 	
-	for(int i = 0; i < 5; i++) 
+	for(int i = 0; i < k; i++) 
 		average += times[i];
 
 	average /= k;
