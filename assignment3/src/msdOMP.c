@@ -59,11 +59,9 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	for(int i  = begining; i < end;i++){
 		
-		DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 		count[get_digit(array[i],digit)]++;
 		
-		DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 	
 	}	
 
@@ -75,11 +73,9 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	for(int i = begining;i < end;i++){
 		
-		DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 		int msdigit = get_digit(array[i],digit);
 		
-		DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
 
 	}
@@ -164,11 +160,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 		for(int i  = task_start; i < task_end;i++){
 	
-			DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 			
 			task_counts[get_digit(array[i],digit)]++;
 			
-			DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		}
 		
 		for(int i = 0; i < NR_BUCKETS;i++){
@@ -205,11 +199,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 		for(int i = task_start;i < task_end;i++){
 			
-			DTRACE_PROBE3(omp,start_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 			
 			int msdigit = get_digit(array[i],digit);
 			
-			DTRACE_PROBE3(omp,finish_get_digit,digit,MAX_DIGITS,NR_BUCKETS);
 		
 			int insert_pos;
 				

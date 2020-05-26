@@ -292,7 +292,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		
 	}
 	
-	DTRACE_PROBE2(mpi,start_gather_workload,end - begining,digit);
+	DTRACE_PROBE2(mpi,finish_gather_workload,end - begining,digit);
 
 	DTRACE_PROBE2(mpi,finish_par_radix,end - begining,digit);
 
@@ -361,6 +361,7 @@ int main(int argc,char **argv){
 	
 	int nr_tests = atoi(argv[1]);
 	int size = atoi(argv[2]);
+	int k = 5;
 
 	MPI_Status status;
 
@@ -399,10 +400,10 @@ int main(int argc,char **argv){
 	sort_double(times,nr_tests);
 
 	double k_best = 0;
-	for(int i = 0;i < 5;i++) 
+	for(int i = 0;i < k;i++) 
 		k_best += times[i];
 	
-	k_best = k_best/5;
+	k_best = k_best/k;
 
 	printf("%f\n",k_best);
 

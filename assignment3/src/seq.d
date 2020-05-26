@@ -9,6 +9,9 @@ provider seq {
 	probe start_count_digits(int,int);
 	probe finish_count_digits(int,int);
 	
+	probe start_insert_into_buckets(int,int);
+	probe finish_insert_into_buckets(int,int);
+
 	probe start_copy_to_main_array(int,int);
 	probe finish_copy_to_main_array(int,int);
 	

@@ -67,7 +67,7 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	}	
 
-
+	
 	for(int i = 1; i < NR_BUCKETS + 1;i++){
 		start[i] += start[i-1] + count[i-1];
 	}
