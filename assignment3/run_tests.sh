@@ -1,28 +1,26 @@
 
 make
 
-scripts=("cpc_probes1.d" "cpc_probes2.d" "cpc_probes3.d" "cpc_probes4.d" "custom_probes_omp.d" "custom_probes_seq.d" "plockstat.d" "sched_probes.d" "sysinfo_probes.d" "vminfo.d")
+scripts=("cpc_probes1.d" "cpc_probes2.d" "cpc_probes3.d" "cpc_probes4.d" "sched_probes.d" "sysinfo_probes.d" "vminfo.d" "plockstat.d")
 
-sizes=(1000000 10000000 100000000) 
+sizes=(1000000 5000000 10000000) 
 cores=8
+repetitions=5
+kbest=5
 
 for size in ${sizes[@]};
 do
 	for s in ${scripts[@]};
 	do
 	
-	./dtrace_scripts/$s '"seq"' > tests/$seq_$s_$size.txt &
-	
-	pid=$!
-	
-	./bin/seq $size 10 10
-	
-	kill -s SIGINT $pid
-
+	echo tests/seq-$s-$size.txt
+	./dtrace_scripts/$s '"seq"' -c "./bin/seq $size $repetitions $kbest" > tests/seq-$s-$size.txt 
 	done
 	
-	./dtrace_scripts/plockstat '"seq"' -c "./bin/seq $size 10 10" > tests/seq_plockstat_$size.txt
+	echo tests/seq-custom_probes_seq-$size.txt
+	./dtrace_scripts/custom_probes_seq.d  -c "./bin/seq $size $repetitions $kbest" > tests/seq-custom_probes_seq-$size.txt 
 done	
+
 
 for((c = 1; c <= $cores; c*=2))
 do
@@ -35,15 +33,13 @@ do
 	do
 
 		
-	./dtrace_scripts/$s '"omp"' > tests/$omp_$c_$s_$size.txt &
+	echo tests/omp-$c-$s-$size.txt
+	./dtrace_scripts/$s '"omp"' -c "./bin/omp $size $repetitions $kbest" > tests/omp-$c-$s-$size.txt 
 	
-	pid=$!
-	
-	./bin/omp $size 1 1
-	
-	kill -s SIGINT $pid
-
 	done
+	
+	echo tests/omp-$c-custom_probes_omp-$size.txt
+	./dtrace_scripts/custom_probes_omp.d  -c "./bin/omp $size $repetitions $kbest" > tests/omp-$c-custom_probes_omp-$size.txt 
 	
 done	
 done
