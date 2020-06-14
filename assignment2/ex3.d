@@ -20,14 +20,14 @@ syscall:::return
 END{
     printf("%s\n",$1);
     
-    printf("time spent sice the start of this program %d\n",timestamp - start);
+    printf("time spent in seconds sice the start of this program %d\n",(timestamp - start)/1000000000);
     
     printf("system calls frequency\n");
     
     printa(@syscalls);
 
-    printf("\ntime spent on each system call in nanoseconds\n");
-
+    printf("\ntime spent on each system call in seconds\n");
+    normalize(@time,1000000000);
     printa(@time);
     
     trunc(@syscalls);
