@@ -1,9 +1,9 @@
-#!/usr/sbin/dtrace -qs
+#!/usr/sbin/dtrace -qs 
 BEGIN{
     start = timestamp;
 }
 syscall:::entry
-/execname == $1/
+/pid == $target/
 {
     @syscalls[probefunc] = count();
     time_pid[pid] = timestamp;
@@ -11,14 +11,13 @@ syscall:::entry
 
 
 syscall:::return
-/time_pid[pid] != 0 & execname == $1/
+/time_pid[pid] != 0 & pid == $target/
 {
     @time[probefunc] = sum(timestamp - time_pid[pid]);
     time_pid[pid] = 0;
 }
 
 END{
-    printf("%s\n",$1);
     
     printf("time spent in seconds sice the start of this program %d\n",(timestamp - start)/1000000000);
     
