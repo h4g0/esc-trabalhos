@@ -8,7 +8,7 @@ seq*:::start_sorting_into_buckets
 {
     started_sorting[pid,arg1] = timestamp;
     started_section[pid,arg1,"sorting_into_buckets"] = timestamp;
-    @sizes_per_digit[arg1] = quantize(arg2);
+    @sizes_per_digit[arg1] = quantize(arg0);
 }
 
 seq*:::finish_sorting_into_buckets
@@ -63,6 +63,7 @@ seq*:::finish_seq_radix
 }
 
 END{
+    @time_spent_in_section["total"] = sum(timestamp - start);
     printf("time spent sorting into buckets\n");
     normalize(@sorting_into_buckets ,1000000000);
     printa(@sorting_into_buckets);

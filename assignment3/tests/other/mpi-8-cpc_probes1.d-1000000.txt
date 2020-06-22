@@ -1,0 +1,5 @@
+1.593042
+data cache misses l1
+
+  l1 cache data misses                                       75875000
+

@@ -1,0 +1,8 @@
+4.642691
+info collected from the system
+
+  number of threads created                                        16
+  number of times threads where forced to give up cpu             5434
+  number of cpu switches between threads                        38607
+
+

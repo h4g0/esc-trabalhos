@@ -105,27 +105,32 @@ void work_allocation(int nprocesses,int *start,int *count,int size) {
 
 void sequential_radix_sort(int* array,int begining,int end,int digit) {	
 		
-	DTRACE_PROBE2(mpi,start_seq_radix,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_seq_radix,end - begining,digit,myrank);
 	
-	if(end <= begining + 1)
+	if(end <= begining + 1){
+		
+		DTRACE_PROBE3(mpi,finish_seq_radix,end - begining,digit,myrank);
 		return ;
-	
-	if(digit == MAX_DIGITS)
-		return ;
+	}
 
+	if(digit == MAX_DIGITS){
+
+		DTRACE_PROBE3(mpi,finish_seq_radix,end - begining,digit,myrank);
+		return ;
+	}
 
 	int count[NR_BUCKETS];
 	int inserted[NR_BUCKETS];
 	int start[NR_BUCKETS + 1];
 	
-	DTRACE_PROBE2(mpi,start_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_sorting_into_buckets,end - begining,digit,myrank);
 
 	
-	DTRACE_PROBE2(mpi,start_allocate_temp_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_allocate_temp_array,end - begining,digit,myrank);
 	
 	int *temp = malloc((end - begining) * sizeof(int));
 	
-	DTRACE_PROBE2(mpi,finish_allocate_temp_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_allocate_temp_array,end - begining,digit,myrank);
 	
 	
 	#pragma ivdep
@@ -137,10 +142,15 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	start[NR_BUCKETS] = 0;
 	
+	DTRACE_PROBE3(mpi,start_count_digits,end - begining,digit,myrank);
+
 	for(int i  = begining; i < end;i++){
 		count[get_digit(array[i],digit)]++;
 	
 	}	
+	
+	DTRACE_PROBE3(mpi,finish_count_digits,end - begining,digit,myrank);
+
 
 
 	for(int i = 1; i < NR_BUCKETS + 1;i++){
@@ -148,13 +158,17 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	}
 
 	
+	DTRACE_PROBE3(mpi,start_insert_into_buckets,end - begining,digit,myrank);
+
 	for(int i = begining;i < end;i++){
 		int msdigit = get_digit(array[i],digit);
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
 
 	}
 	
-	DTRACE_PROBE2(mpi,start_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_insert_into_buckets,end - begining,digit,myrank);
+
+	DTRACE_PROBE3(mpi,start_copy_to_main_array,end - begining,digit,myrank);
 
 	#pragma ivdep
 	for(int i = 0; i < end - begining;i++)
@@ -162,16 +176,16 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 	free(temp);
 	
-	DTRACE_PROBE2(mpi,finish_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_copy_to_main_array,end - begining,digit,myrank);
 
 
-	DTRACE_PROBE2(mpi,finish_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_sorting_into_buckets,end - begining,digit,myrank);
 
 	for(int i = 1; i < NR_BUCKETS + 1; i++) {
 		sequential_radix_sort(array,begining + start[i-1] ,begining + start[i],digit + 1);
 	}
 	
-	DTRACE_PROBE2(mpi,finish_seq_radix,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_seq_radix,end - begining,digit,myrank);
 
 
 
@@ -179,7 +193,7 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 void parallel_radix_sort(int* array,int begining,int end,int digit) {	
 		
-	DTRACE_PROBE2(mpi,start_par_radix,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_par_radix,end - begining,digit,myrank);
 
 	if(end <= begining + 1)
 		return ;
@@ -194,7 +208,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 	int *temp = malloc((end - begining) * sizeof(int));
 	
 
-	DTRACE_PROBE2(mpi,start_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_sorting_into_buckets,end - begining,digit,myrank);
 
 	#pragma vectorize always
 	for(int i = 0; i < NR_BUCKETS; i++){ 
@@ -203,7 +217,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		start[i] = 0;
 	}
 	
-	DTRACE_PROBE2(mpi,start_count_digits,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_count_digits,end - begining,digit,myrank);
 
 
 	for(int i  = begining; i < end;i++){
@@ -217,9 +231,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		start[i] += start[i-1] + count[i-1];
 	}
 
-	DTRACE_PROBE2(mpi,finish_count_digits,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_count_digits,end - begining,digit,myrank);
 
-	DTRACE_PROBE2(mpi,start_insert_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_insert_into_buckets,end - begining,digit,myrank);
 
 	for(int i = begining;i < end;i++){
 		int msdigit = get_digit(array[i],digit);
@@ -227,9 +241,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 	}
 	
-	DTRACE_PROBE2(mpi,finish_insert_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_insert_into_buckets,end - begining,digit,myrank);
 	
-	DTRACE_PROBE2(mpi,start_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_copy_to_main_array,end - begining,digit,myrank);
 	#pragma vectorize always
 	for(int i = 0; i < end - begining;i++)
 		array[begining + i] = temp[i];
@@ -238,20 +252,20 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 	free(temp);
 
-	DTRACE_PROBE2(mpi,finish_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_copy_to_main_array,end - begining,digit,myrank);
 
-	DTRACE_PROBE2(mpi,finish_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_sorting_into_buckets,end - begining,digit,myrank);
 
 	int scatters = NR_BUCKETS/nprocesses;
 	
-	DTRACE_PROBE2(mpi,start_workload_distribution,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_workload_distribution,end - begining,digit,myrank);
 
 	work_allocation(nprocesses,start,count,NR_BUCKETS);
 
-	DTRACE_PROBE2(mpi,finish_workload_distribution,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_workload_distribution,end - begining,digit,myrank);
 
 
-	DTRACE_PROBE2(mpi,start_scatter_workload,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_scatter_workload,end - begining,digit,myrank);
 
 
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -275,12 +289,12 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		
 	}
 
-	DTRACE_PROBE2(mpi,finish_scatter_workload,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_scatter_workload,end - begining,digit,myrank);
 
 	for(int i = 0; i < scatters;i++) 
 		sequential_radix_sort(array + start[i*nprocesses],0,count[i*nprocesses],2);
 	
-	DTRACE_PROBE2(mpi,start_gather_workload,end - begining,digit);
+	DTRACE_PROBE3(mpi,start_gather_workload,end - begining,digit,myrank);
 
 	for(int i = 0; i < scatters;i++) {
 
@@ -292,9 +306,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		
 	}
 	
-	DTRACE_PROBE2(mpi,finish_gather_workload,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_gather_workload,end - begining,digit,myrank);
 
-	DTRACE_PROBE2(mpi,finish_par_radix,end - begining,digit);
+	DTRACE_PROBE3(mpi,finish_par_radix,end - begining,digit,myrank);
 
 
 }
@@ -359,8 +373,8 @@ int main(int argc,char **argv){
 	init();
 	
 	
-	int nr_tests = atoi(argv[1]);
-	int size = atoi(argv[2]);
+	int size = atoi(argv[1]);
+	int nr_tests = atoi(argv[2]);
 	int k = 5;
 
 	MPI_Status status;

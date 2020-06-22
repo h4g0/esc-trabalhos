@@ -1,0 +1,10 @@
+sorted 0
+sorted 0
+sorted 0
+sorted 0
+sorted 0
+1.121959
+instruction cache misses l1
+
+  l1 cache instruction misses                                 9425000
+

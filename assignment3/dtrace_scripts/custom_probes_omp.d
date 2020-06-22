@@ -6,60 +6,71 @@ BEGIN{
 
 omp*:::start_sorting_into_buckets
 {
-    started_sorting[pid,arg1] = timestamp;
-    started_section[pid,arg1,"sorting_into_buckets"] = timestamp;
-    @sizes_per_digit[arg1] = quantize(arg2);
+    
+    started_section[arg2,arg1,"sorting_into_buckets"] = timestamp;
+    @sizes_per_digit[arg1] = quantize(arg0);
 }
 
 omp*:::finish_sorting_into_buckets
-/started_sorting[pid,arg1] != 0/
+/started_section[arg2,arg1,"sorting_into_buckets"] != 0/
 {
-    @sorting_into_buckets[arg1] = sum(timestamp - started_sorting[pid,arg1]);
-    started_sorting[pid,arg1] = 0;
-    @time_spent_in_section["sorting into buckets"] = sum(timestamp - started_section[pid,arg1,"sorting_into_buckets"]);
-    started_section[pid,arg1,"sorting_into_buckets"] = 0;
+
+    @sorting_into_buckets[arg1] = sum(timestamp - started_section[arg2,arg1,"sorting_into_buckets"]);
+    @time_spent_in_section["sorting into buckets"] = sum(timestamp - started_section[arg2,arg1,"sorting_into_buckets"]);
+    started_section[arg2,arg1,"sorting_into_buckets"] = 0;
 }
 
 
 omp*:::start_copy_to_main_array
 {
-	started_section[pid,arg1,"copy_to_main_array"] = timestamp;
+	started_section[arg2,arg1,"copy_to_main_array"] = timestamp;
 }
 
 omp*:::finish_copy_to_main_array
-/started_section[pid,arg1,"copy_to_main_array"] != 0/ 
+/started_section[arg2,arg1,"copy_to_main_array"] != 0/ 
 {
-	@time_spent_in_section["copy to main array"] = sum(timestamp - started_section[pid,arg1,"copy_to_main_array"]);
-	started_section[pid,arg1,"copy_to_main_array"] = 0;
+	@time_spent_in_section["copy to main array"] = sum(timestamp - started_section[arg2,arg1,"copy_to_main_array"]);
+	started_section[arg2,arg1,"copy_to_main_array"] = 0;
 }
 
 omp*:::start_allocate_temp_array
 {
-	started_section[pid,arg1,"allocate_temp_array"] = timestamp;
+	started_section[arg2,arg1,"allocate_temp_array"] = timestamp;
 }
 
 omp*:::finish_allocate_temp_array
-/started_section[pid,arg1,"allocate_temp_array"] != 0/ 
+/started_section[arg2,arg1,"allocate_temp_array"] != 0/ 
 {
-	@time_spent_in_section["allocate temp array"] = sum(timestamp - started_section[pid,arg1,"allocate_temp_array"]);
-	started_section[pid,arg1,"allocate_temp_array"] = 0;
+	@time_spent_in_section["allocate temp array"] = sum(timestamp - started_section[arg2,arg1,"allocate_temp_array"]);
+	started_section[arg2,arg1,"allocate_temp_array"] = 0;
 }
 
+omp*:::start_par_radix
+{
+	@get_digit[arg1] = count();
+	started_section[arg2,arg1,"recursive_calls"] = timestamp;
+}
+
+omp*:::finish_par_radix
+/started_section[arg2,arg1,"recursive_calls"] != 0/
+{
+	@time_getting_digit[arg1] = sum(timestamp - started_section[arg2,arg1,"recursive_calls"]);
+	@time_spent_in_section["recursive calls"] = sum(timestamp - started_section[arg2,arg1,"recursive_calls"]);
+	started_section[arg2,arg1,"recursive_calls"] = 0;
+}
 
 omp*:::start_seq_radix
 {
 	@get_digit[arg1] = count();
-	getting_digit[pid,arg1] = timestamp;
-	started_section[pid,arg1,"recusrive_calls"] = timestamp;
+	started_section[arg2,arg1,"recursive_calls"] = timestamp;
 }
 
 omp*:::finish_seq_radix
-/getting_digit[pid,arg1] != 0/
+/started_section[arg2,arg1,"recursive_calls"] != 0/
 {
-	@time_getting_digit[arg1] = sum(timestamp - getting_digit[pid,arg1]);
-	@time_spent_in_section["recursive calls"] = sum(timestamp - started_section[pid,arg1,"total"]);
-	getting_digit[pid,arg1] = 0;
-	started_section[pid,arg1,"recursive_calls"] = 0;
+	@time_getting_digit[arg1] = sum(timestamp - started_section[arg2,arg1,"recursive_calls"]);
+	@time_spent_in_section["recursive calls"] = sum(timestamp - started_section[arg2,arg1,"recursive_calls"]);
+	started_section[arg2,arg1,"recursive_calls"] = 0;
 }
 
 END{

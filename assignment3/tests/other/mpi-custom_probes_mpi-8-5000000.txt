@@ -1,0 +1,48 @@
+ CPU     ID                    FUNCTION:NAME
+   3      2                             :END time spent sorting into buckets
+
+                3                1
+                2                1
+                1                1
+array sizes per digit
+
+                1
+           value  ------------- Distribution ------------- count    
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 5        
+         8388608 |                                         0        
+
+                2
+           value  ------------- Distribution ------------- count    
+         1048576 |                                         0        
+         2097152 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+         4194304 |                                         0        
+
+                3
+           value  ------------- Distribution ------------- count    
+            8192 |                                         0        
+           16384 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 1280     
+           32768 |                                         0        
+
+time spent per digit
+
+                2                4
+                1               13
+calls by digit
+
+                1                5
+                2              640
+                3             1280
+                4           163840
+time spent in different sections of the program
+
+  workload distribution                                             0
+  allocate temp array                                               0
+  copy to main array                                                0
+  scatter workload                                                  2
+  sorting into buckets                                              5
+  gather workload                                                   5
+  total                                                            15
+  recursive calls                                                  18
+
+

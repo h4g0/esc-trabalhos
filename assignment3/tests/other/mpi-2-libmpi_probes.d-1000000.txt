@@ -1,0 +1,193 @@
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+0.000000
+ CPU     ID                    FUNCTION:NAME
+   1      2                             :END Communication times using different primitives
+
+Integers sent or received for each function call
+
+
+
+ CPU     ID                    FUNCTION:NAME
+   0      2                             :END Communication times using different primitives
+
+Integers sent or received for each function call
+
+
+
+0.150995
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              64 |                                         0        
+             128 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+             256 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@                                        5        
+               1 |                                         0        
+               2 |                                         0        
+               4 |                                         0        
+               8 |                                         0        
+              16 |                                         0        
+              32 |                                         0        
+              64 |                                         0        
+             128 |                                         0        
+             256 |                                         0        
+             512 |                                         0        
+            1024 |                                         0        
+            2048 |                                         0        
+            4096 |                                         0        
+            8192 |                                         0        
+           16384 |                                         0        
+           32768 |                                         0        
+           65536 |                                         0        
+          131072 |                                         0        
+          262144 |                                         0        
+          524288 |                                         0        
+         1048576 |                                         0        
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  315      
+         8388608 |                                         0        
+
+
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              64 |                                         0        
+             128 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+             256 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@                                        5        
+               1 |                                         0        
+               2 |                                         0        
+               4 |                                         0        
+               8 |                                         0        
+              16 |                                         0        
+              32 |                                         0        
+              64 |                                         0        
+             128 |                                         0        
+             256 |                                         0        
+             512 |                                         0        
+            1024 |                                         0        
+            2048 |                                         0        
+            4096 |                                         0        
+            8192 |                                         0        
+           16384 |                                         0        
+           32768 |                                         0        
+           65536 |                                         0        
+          131072 |                                         0        
+          262144 |                                         0        
+          524288 |                                         0        
+         1048576 |                                         0        
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  315      
+         8388608 |                                         0        
+
+
+0.149632
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              64 |                                         0        
+             128 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+             256 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@                                        5        
+               1 |                                         0        
+               2 |                                         0        
+               4 |                                         0        
+               8 |                                         0        
+              16 |                                         0        
+              32 |                                         0        
+              64 |                                         0        
+             128 |                                         0        
+             256 |                                         0        
+             512 |                                         0        
+            1024 |                                         0        
+            2048 |                                         0        
+            4096 |                                         0        
+            8192 |                                         0        
+           16384 |                                         0        
+           32768 |                                         0        
+           65536 |                                         0        
+          131072 |                                         0        
+          262144 |                                         0        
+          524288 |                                         0        
+         1048576 |                                         0        
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  315      
+         8388608 |                                         0        
+
+
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              64 |                                         0        
+             128 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+             256 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@                                        5        
+               1 |                                         0        
+               2 |                                         0        
+               4 |                                         0        
+               8 |                                         0        
+              16 |                                         0        
+              32 |                                         0        
+              64 |                                         0        
+             128 |                                         0        
+             256 |                                         0        
+             512 |                                         0        
+            1024 |                                         0        
+            2048 |                                         0        
+            4096 |                                         0        
+            8192 |                                         0        
+           16384 |                                         0        
+           32768 |                                         0        
+           65536 |                                         0        
+          131072 |                                         0        
+          262144 |                                         0        
+          524288 |                                         0        
+         1048576 |                                         0        
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  315      
+         8388608 |                                         0        
+
+

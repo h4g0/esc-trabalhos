@@ -59,6 +59,8 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	start[NR_BUCKETS] = 0;
 	
+	DTRACE_PROBE2(seq,start_count_digits,end - begining,digit);
+
 	for(int i  = begining; i < end;i++){
 		
 		
@@ -67,12 +69,15 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	}	
 
+	DTRACE_PROBE2(seq,finish_count_digits,end - begining,digit);
+
 	
 	for(int i = 1; i < NR_BUCKETS + 1;i++){
 		start[i] += start[i-1] + count[i-1];
 	}
 
-	
+	DTRACE_PROBE2(seq,start_insert_into_buckets,end - begining,digit);
+
 	for(int i = begining;i < end;i++){
 		
 		
@@ -81,7 +86,8 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 		
 
 	}
-	
+	DTRACE_PROBE2(seq,finish_insert_into_buckets,end - begining,digit);
+
 	DTRACE_PROBE2(seq,start_copy_to_main_array,end - begining,digit);
 
 	#pragma ivdep

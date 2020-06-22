@@ -1,0 +1,70 @@
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+0.000000
+ CPU     ID                    FUNCTION:NAME
+   0      2                             :END Communication times using different primitives
+
+Integers sent or received for each function call
+
+
+
+0.202820
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+               1 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  630      
+         8388608 |@                                        10       
+        16777216 |                                         0        
+
+
+0.207555
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+               1 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  630      
+         8388608 |@                                        10       
+        16777216 |                                         0        
+
+

@@ -23,9 +23,9 @@ int get_digit(int number,int digit){
 	
 }
 
-void sequential_radix_sort(int* array,int begining,int end,int digit) {	
+void sequential_radix_sort(int* array,int begining,int end,int digit,int bucket) {	
 		
-	DTRACE_PROBE2(omp,start_seq_radix,end - begining,digit);
+	DTRACE_PROBE3(omp,start_seq_radix,end - begining,digit,bucket);
 	
 	if(end <= begining + 1)
 		return ;
@@ -38,14 +38,14 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	int inserted[NR_BUCKETS];
 	int start[NR_BUCKETS + 1];
 	
-	DTRACE_PROBE2(omp,start_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,start_sorting_into_buckets,end - begining,digit,bucket);
 
 	
-	DTRACE_PROBE2(omp,start_allocate_temp_array,end - begining,digit);
+	DTRACE_PROBE3(omp,start_allocate_temp_array,end - begining,digit,bucket);
 	
 	int *temp = malloc((end - begining) * sizeof(int));
 	
-	DTRACE_PROBE2(omp,finish_allocate_temp_array,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_allocate_temp_array,end - begining,digit,bucket);
 	
 	
 	#pragma ivdep
@@ -57,6 +57,8 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 	
 	start[NR_BUCKETS] = 0;
 	
+	DTRACE_PROBE3(omp,start_count_digits,end - begining,digit,bucket);
+
 	for(int i  = begining; i < end;i++){
 		
 		
@@ -64,13 +66,16 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 		
 	
 	}	
+	DTRACE_PROBE3(omp,finish_count_digits,end - begining,digit,bucket);
+
 
 
 	for(int i = 1; i < NR_BUCKETS + 1;i++){
 		start[i] += start[i-1] + count[i-1];
 	}
 
-	
+	DTRACE_PROBE3(omp,start_insert_into_buckets,end - begining,digit,bucket);
+
 	for(int i = begining;i < end;i++){
 		
 		
@@ -79,8 +84,11 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 		temp[start[msdigit] + inserted[msdigit]++] = array[i];
 
 	}
+
+	DTRACE_PROBE3(omp,finish_insert_into_buckets,end - begining,digit,bucket);
+
 	
-	DTRACE_PROBE2(omp,start_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(omp,start_copy_to_main_array,end - begining,digit,bucket);
 
 	#pragma ivdep
 	for(int i = 0; i < end - begining;i++)
@@ -88,16 +96,16 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 	free(temp);
 	
-	DTRACE_PROBE2(omp,finish_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_copy_to_main_array,end - begining,digit,bucket);
 
 
-	DTRACE_PROBE2(omp,finish_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_sorting_into_buckets,end - begining,digit,bucket);
 
 	for(int i = 1; i < NR_BUCKETS + 1; i++) {
-		sequential_radix_sort(array,begining + start[i-1] ,begining + start[i],digit + 1);
+		sequential_radix_sort(array,begining + start[i-1] ,begining + start[i],digit + 1,bucket);
 	}
 	
-	DTRACE_PROBE2(omp,finish_seq_radix,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_seq_radix,end - begining,digit,bucket);
 
 
 
@@ -105,13 +113,20 @@ void sequential_radix_sort(int* array,int begining,int end,int digit) {
 
 void parallel_radix_sort(int* array,int begining,int end,int digit) {	
 	
-	DTRACE_PROBE2(omp,start_par_radix,end - begining,digit);
+	DTRACE_PROBE3(omp,start_par_radix,end - begining,digit,0);
 
-	if(end <= begining + 1)
+	if(end <= begining + 1){		
+		
+		DTRACE_PROBE3(omp,finish_par_radix,end - begining,digit,0);
 		return ;
-	
-	if(digit == MAX_DIGITS)
+	}
+
+	if(digit == MAX_DIGITS){
+		
+		DTRACE_PROBE3(omp,finish_par_radix,end - begining,digit,0);
 		return ;
+
+	}
 
 	int count[NR_BUCKETS];
 	int inserted[NR_BUCKETS];
@@ -120,7 +135,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 	int *temp = malloc((end - begining) * sizeof(int));
 	
 
-	DTRACE_PROBE2(omp,start_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,start_sorting_into_buckets,end - begining,digit,0);
 	
 	
 	#pragma ivdep
@@ -133,7 +148,7 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 	
 	
-	DTRACE_PROBE2(omp,start_count_digits,end - begining,digit);
+	DTRACE_PROBE3(omp,start_count_digits,end - begining,digit,0);
 	
 	int task_size = (end - begining)/NR_BUCKETS;
 	
@@ -181,9 +196,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 		start[i] += start[i-1] + count[i-1];
 	}
 	
-	DTRACE_PROBE2(omp,finish_count_digits,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_count_digits,end - begining,digit,0);
 	
-	DTRACE_PROBE2(omp,start_insert_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,start_insert_into_buckets,end - begining,digit,0);
 
 	for(int task = 0; task < NR_BUCKETS;task++) {
 		
@@ -221,9 +236,9 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 	
 	#pragma omp taskwait
 	
-	DTRACE_PROBE2(omp,finish_insert_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_insert_into_buckets,end - begining,digit,0);
 	
-	DTRACE_PROBE2(omp,start_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(omp,start_copy_to_main_array,end - begining,digit,0);
 	#pragma ivdep
 	for(int i = 0; i < end - begining;i++)
 		array[begining + i] = temp[i];
@@ -233,21 +248,20 @@ void parallel_radix_sort(int* array,int begining,int end,int digit) {
 
 	free(temp);
 	
-	DTRACE_PROBE2(omp,finish_copy_to_main_array,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_copy_to_main_array,end - begining,digit,0);
 	
-	DTRACE_PROBE2(omp,finish_sorting_into_buckets,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_sorting_into_buckets,end - begining,digit,0);
 	
 
 	for(int i = 0; i < NR_BUCKETS; i++) {
 		#pragma omp task shared(array)
-		
-		sequential_radix_sort(array,start[i],begining + start[i] + count[i],digit + 1);
+		sequential_radix_sort(array,start[i],begining + start[i] + count[i],digit + 1,i + 1);
 
 	}
 
 	#pragma omp taskwait
 
-	DTRACE_PROBE2(omp,finish_par_radix,end - begining,digit);
+	DTRACE_PROBE3(omp,finish_par_radix,end - begining,digit,0);
 }
 
 
@@ -259,7 +273,7 @@ void radix_sort(int *array,int size){
 
 void s_radix_sort(int *array,int size){
 	
-	sequential_radix_sort(array,0,size,2);
+	sequential_radix_sort(array,0,size,2,0);
 }
 
 void init(){

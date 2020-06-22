@@ -1,0 +1,10 @@
+sorted 0
+sorted 0
+sorted 0
+sorted 0
+sorted 0
+0.713145
+data cache misses l2
+
+  l2 cache data misses                                       10425000
+

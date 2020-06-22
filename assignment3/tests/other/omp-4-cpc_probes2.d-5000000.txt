@@ -1,0 +1,5 @@
+0.651012
+data cache misses l2
+
+  l2 cache data misses                                        3435000
+

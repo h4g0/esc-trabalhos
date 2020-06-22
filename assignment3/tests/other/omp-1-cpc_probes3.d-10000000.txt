@@ -1,0 +1,5 @@
+2.172454
+instruction cache misses l1
+
+  l1 cache instruction misses                                10775000
+

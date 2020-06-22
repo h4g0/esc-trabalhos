@@ -1,0 +1,47 @@
+ CPU     ID                    FUNCTION:NAME
+   6      2                             :END time spent sorting into buckets
+
+                2                0
+                3                1
+                1                4
+array sizes per digit
+
+                1
+           value  ------------- Distribution ------------- count    
+          262144 |                                         0        
+          524288 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4        
+         1048576 |                                         0        
+
+                2
+           value  ------------- Distribution ------------- count    
+          131072 |                                         0        
+          262144 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+          524288 |                                         0        
+
+                3
+           value  ------------- Distribution ------------- count    
+            1024 |                                         0        
+            2048 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 1278     
+            4096 |                                         2        
+            8192 |                                         0        
+
+time spent per digit
+
+                3                1
+                2                2
+                1                6
+calls by digit
+
+                1                4
+                2              640
+                3             1280
+                4           163840
+time spent in different sections of the program
+
+  workload distribution                                             0
+  copy to main array                                                0
+  sorting into buckets                                              6
+  total                                                             8
+  recursive calls                                                  10
+
+

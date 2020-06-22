@@ -20,9 +20,9 @@ sched:::off-cpu
 
 END{
     printf("time spent per strech per  cpu\n");
-    normalize(@strech_time_cpu,1000000000);
     printa(@strech_time_cpu);
     trunc(@strech_time_cpu);
+    
     printf("time per cpu\n");
     normalize(@total_time_cpu,1000000000);
     printa(@total_time_cpu);

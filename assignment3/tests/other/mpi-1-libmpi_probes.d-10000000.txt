@@ -1,0 +1,23 @@
+2.145818
+Communication times using different primitives
+
+  bcast                                                             0
+  gatherv                                                           0
+Integers sent or received for each function call
+
+  bcast                                             
+           value  ------------- Distribution ------------- count    
+              -1 |                                         0        
+               0 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 10       
+               1 |                                         0        
+
+  gatherv                                           
+           value  ------------- Distribution ------------- count    
+         2097152 |                                         0        
+         4194304 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  630      
+         8388608 |                                         0        
+        16777216 |                                         5        
+        33554432 |                                         5        
+        67108864 |                                         0        
+
+
