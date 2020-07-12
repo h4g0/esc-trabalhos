@@ -1,22 +1,16 @@
-default: msdOMP.o msdSEQ.o msdPT.o msdCPP.o
-	gcc -O3 -fopenmp -o bin/omp msdOMP.o
-	gcc -O3 -fopenmp -o bin/seq msdSEQ.o
-	gcc -g -Wall -O3 -fopenmp -o bin/pt msdPT.o -lpthread
-	g++ -g -Wall -O3 -fopenmp -o bin/cpp msdCPP.o -lpthread
+compiler = g++
+options = -ggdb -O3
+default: naive/naive.c sd/main.o sd/sort.o sd/sort.h
+	export SORT=true
+	$(compiler) $(options) -o bin/sort  sd/main.o sd/sort.o sd/sort.h 
+	$(compiler) $(options) -o bin/naive naive/naive.c
+	rm sd/*.o
 
-	rm *.o*
-
-msdPT.o:src/msdPT.c
-	gcc -c src/msdPT.c
-
-msdOMP.o:src/msdOMP.c
-	gcc -c src/msdOMP.c
-
-msdSEQ.o:src/msdSEQ.c
-	gcc -c src/msdSEQ.c
-
-msdCPP.o:src/msdCPP.cpp
-	g++ -std=c++11 -c src/msdCPP.cpp
-
+sd/main.o: sd/main.c sd/sort.h
+	g++ -c sd/main.c
+	mv main.o sd
+sd/sort.o: sd/sort.c sd/sort.h 
+	g++ -c sd/sort.c
+	mv sort.o sd
 clean: 
 	rm bin/*

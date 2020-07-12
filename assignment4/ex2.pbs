@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=24:r431
+#PBS -l walltime=02:00:00
+#PBS -V
+
+cd assignment4
+
+metrics=( "cpu-cycles" "cpu-clock" "L1-dcache-load-misses" "L1-dcache-loads" "L1-dcache-store-misses" "instructions" "cache-misses" "branch-misses" "cpu-migrations" "branches" "L1-dcache-loads" "L1-dcache-load-misses" "L1-dcache-stores" "L1-dcache-store-misses" "L1-icache-loads" "LLC-loads" "LLC-load-misses" "LLC-store-misses" "dTLB-load-misses" "iTLB-load-misses" "branch-loads" "branch-load-misses")
+
+
+module load gcc/5.3.0
+make
+
+for metric in ${metrics[@]};
+do
+	echo $metric >> 2048_1.txt
+	perf record -e $metric ./bin/naive 1 2048
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 2048_1.txt
+
+	echo $metric >> 2048_2.txt
+	perf record -e $metric ./bin/naive 2 2048
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 2048_2.txt
+
+	echo $metric >> 512_1.txt
+	perf record -e $metric ./bin/naive 1 512
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 512_1.txt
+
+	echo $metric >> 512_2.txt
+	perf record -e $metric ./bin/naive 2 512
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 512_2.txt
+
+	echo $metric >> 128_1.txt
+	perf record -e $metric ./bin/naive 1 128
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 128_1.txt
+
+	echo $metric >> 128_2.txt
+	perf record -e $metric ./bin/naive 2 128
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 128_2.txt
+
+	echo $metric >> 32_1.txt
+	perf record -e $metric ./bin/naive 1 32
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 32_1.txt
+
+	echo $metric >> 32_2.txt
+	perf record -e $metric ./bin/naive 2 32
+	perf report --stdio --show-nr-samples --dsos=naive | grep "Event" >> 32_2.txt
+done
